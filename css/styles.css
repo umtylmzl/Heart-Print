@@ -1,0 +1,369 @@
+/* Heart Print – ekran + A4 yazdırma */
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* ---------- Canlı ekran arka planı (yazdırmada kapalı) ---------- */
+.app-shell {
+  background-color: #fff5f9;
+}
+
+.app-bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 100% 85% at 0% -10%, rgba(255, 107, 149, 0.42), transparent 55%),
+    radial-gradient(ellipse 90% 75% at 100% 0%, rgba(167, 139, 250, 0.48), transparent 52%),
+    radial-gradient(ellipse 70% 55% at 50% 110%, rgba(251, 113, 133, 0.28), transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(253, 224, 231, 0.9) 0%, transparent 42%),
+    linear-gradient(168deg, #fff8fb 0%, #f5f0ff 40%, #fff0f6 72%, #fce4ec 100%);
+}
+
+.app-bg-layer::before,
+.app-bg-layer::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.75;
+  animation: app-bg-float 18s ease-in-out infinite alternate;
+}
+
+.app-bg-layer::before {
+  width: min(72vmin, 28rem);
+  height: min(72vmin, 28rem);
+  left: -8%;
+  top: 18%;
+  background: radial-gradient(circle, rgba(255, 107, 149, 0.55) 0%, rgba(255, 182, 193, 0.15) 55%, transparent 70%);
+  animation-delay: -4s;
+}
+
+.app-bg-layer::after {
+  width: min(85vmin, 34rem);
+  height: min(85vmin, 34rem);
+  right: -12%;
+  bottom: -5%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.5) 0%, rgba(196, 181, 253, 0.2) 55%, transparent 70%);
+  animation-delay: -9s;
+}
+
+@keyframes app-bg-float {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(4%, -3%) scale(1.06);
+  }
+}
+
+.app-glass-header {
+  background: rgba(255, 255, 255, 0.52);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-bg-layer::before,
+  .app-bg-layer::after {
+    animation: none;
+  }
+}
+
+/* İmza satırı (JS ile doldurulur); Tailwind CDN dinamik sınıfları görmez */
+[data-site-credit] a {
+  color: #6b7280;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+[data-site-credit] a:hover {
+  color: #ff6b95;
+}
+
+[data-site-credit] a:focus-visible {
+  outline: 2px solid #ff6b95;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Ana ekranda sabit alt bar + iPhone çentik alanı */
+body.info-modal-open {
+  overflow: hidden;
+}
+
+body.has-main-bar {
+  padding-bottom: max(9.5rem, calc(env(safe-area-inset-bottom, 0px) + 7.5rem));
+}
+
+@media (min-width: 768px) {
+  body.has-main-bar {
+    padding-bottom: max(8rem, calc(env(safe-area-inset-bottom, 0px) + 5.5rem));
+  }
+}
+
+/* Kalp önizleme (sadece ekran; yazdırmada mm kuralları geçerli) */
+.print-card .heart-print.heart-screen {
+  width: calc(var(--mm, 20) * 2.05px);
+  height: calc(var(--mm, 20) * 2.05px);
+}
+
+@media (min-width: 480px) {
+  .print-card .heart-print.heart-screen {
+    width: calc(var(--mm, 20) * 2.25px);
+    height: calc(var(--mm, 20) * 2.25px);
+  }
+}
+
+@media (min-width: 640px) {
+  .print-card .heart-print.heart-screen {
+    width: calc(var(--mm, 20) * 2.35px);
+    height: calc(var(--mm, 20) * 2.35px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .print-card .heart-print.heart-screen {
+    width: calc(var(--mm, 20) * 2.5px);
+    height: calc(var(--mm, 20) * 2.5px);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #ff6b95;
+  border-radius: 4px;
+}
+
+.heart-mask {
+  clip-path: url(#heart-clip);
+  -webkit-clip-path: url(#heart-clip);
+}
+
+.screen-hidden {
+  display: none !important;
+}
+
+/* Erişilebilirlik: klavye odakları */
+button:focus-visible {
+  outline: 2px solid #ff6b95;
+  outline-offset: 2px;
+}
+
+/* Yazdır: A4 tek sayfa, kesime uygun güvenli alan */
+@media print {
+  @page {
+    size: A4 portrait;
+    /* Ev yazıcılarında sık kesilen kenarlar için ~12mm güvenli alan */
+    margin: 12mm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    height: auto;
+  }
+
+  #uploadScreen,
+  header,
+  .upload-bar-wrap,
+  .bottom-bar,
+  .app-bg-layer,
+  .no-print {
+    display: none !important;
+  }
+
+  #mainScreen {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    width: 100%;
+  }
+
+  /* Yazdırılabilir genişlik ≈ 210 - 24 = 186mm; grid ortalanır */
+  .print-wrap {
+    display: block !important;
+    width: 100%;
+    max-width: 186mm;
+    margin: 0 auto;
+    padding: 0 !important;
+  }
+
+  /* 5 sütun × 2 satır = 10 boyut; yatayda sığdır, dikey boşluk kesim için */
+  .print-grid {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+    column-gap: 5mm !important;
+    row-gap: 7mm !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    align-items: end !important;
+    justify-items: center !important;
+    width: 100%;
+  }
+
+  .print-card {
+    background: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    width: 100%;
+    max-width: 34mm;
+  }
+
+  .print-card .size-preview-wrap {
+    position: relative !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 auto 1.5mm !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .print-card .cut-guide {
+    display: block !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    border: 0.35mm dashed #222 !important;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40% !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .print-card .heart-print {
+    position: relative !important;
+    z-index: 1 !important;
+    clip-path: url(#heart-clip) !important;
+    -webkit-clip-path: url(#heart-clip) !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .print-card .heart-print img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .print-card h3 {
+    display: none !important;
+  }
+
+  .print-label {
+    font-size: 6.5pt !important;
+    color: #000 !important;
+    margin: 0 !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    letter-spacing: 0.02em;
+  }
+
+  .print-card[data-mm='15'] .cut-guide,
+  .print-card[data-mm='15'] .heart-print {
+    width: 15mm !important;
+    height: 15mm !important;
+  }
+  .print-card[data-mm='16'] .cut-guide,
+  .print-card[data-mm='16'] .heart-print {
+    width: 16mm !important;
+    height: 16mm !important;
+  }
+  .print-card[data-mm='17'] .cut-guide,
+  .print-card[data-mm='17'] .heart-print {
+    width: 17mm !important;
+    height: 17mm !important;
+  }
+  .print-card[data-mm='18'] .cut-guide,
+  .print-card[data-mm='18'] .heart-print {
+    width: 18mm !important;
+    height: 18mm !important;
+  }
+  .print-card[data-mm='19'] .cut-guide,
+  .print-card[data-mm='19'] .heart-print {
+    width: 19mm !important;
+    height: 19mm !important;
+  }
+  .print-card[data-mm='20'] .cut-guide,
+  .print-card[data-mm='20'] .heart-print {
+    width: 20mm !important;
+    height: 20mm !important;
+  }
+  .print-card[data-mm='21'] .cut-guide,
+  .print-card[data-mm='21'] .heart-print {
+    width: 21mm !important;
+    height: 21mm !important;
+  }
+  .print-card[data-mm='22'] .cut-guide,
+  .print-card[data-mm='22'] .heart-print {
+    width: 22mm !important;
+    height: 22mm !important;
+  }
+  .print-card[data-mm='24'] .cut-guide,
+  .print-card[data-mm='24'] .heart-print {
+    width: 24mm !important;
+    height: 24mm !important;
+  }
+  .print-card[data-mm='25'] .cut-guide,
+  .print-card[data-mm='25'] .heart-print {
+    width: 25mm !important;
+    height: 25mm !important;
+  }
+}
+
+/* Bilgi diyaloğu: Tailwind’de hidden+flex çakışmasını önlemek için */
+.info-overlay {
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.info-overlay.is-open {
+  display: flex;
+}
+
+@media (min-width: 640px) {
+  .info-overlay.is-open {
+    align-items: center;
+  }
+}

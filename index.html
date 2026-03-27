@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Heart Print – Madalyon Fotoğraf Yazdır</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                pink: '#ff6b95',
+                'pink-light': '#ffd6e0',
+                purple: '#a78bfa',
+                bg: '#f9fafb',
+              },
+            },
+            boxShadow: {
+              glow: '0 0 20px rgba(255, 107, 149, 0.35)',
+              card: '0 4px 20px rgba(0, 0, 0, 0.05)',
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.3s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="app-shell relative min-h-[100dvh] text-gray-800 antialiased">
+    <div class="app-bg-layer no-print" aria-hidden="true"></div>
+    <svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id="heart-clip" clipPathUnits="objectBoundingBox">
+          <path
+            d="M0.5,1 C0.5,1,0.1,0.7,0,0.4 C0,0.15,0.2,0,0.35,0 C0.44,0,0.48,0.1,0.5,0.15 C0.52,0.1,0.56,0,0.65,0 C0.8,0,1,0.15,1,0.4 C0.9,0.7,0.5,1,0.5,1 Z"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+
+    <div id="uploadScreen" class="relative z-10 flex min-h-[100dvh] min-h-screen flex-col">
+      <header class="app-glass-header w-full border-b border-white/50 py-4 sm:py-5 px-4 sm:px-6 md:px-12 pt-[max(1rem,env(safe-area-inset-top,0px))] flex flex-wrap items-center justify-between gap-2 shadow-[0_1px_0_rgba(255,255,255,0.6)]">
+        <button
+          type="button"
+          class="js-brand-logo text-xl sm:text-2xl font-bold text-brand-pink tracking-tight text-left hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md"
+        >
+          Heart Print
+        </button>
+        <nav class="hidden md:flex gap-6 lg:gap-8 text-gray-600 font-medium text-sm" aria-label="Üst menü">
+          <button type="button" class="js-nav-home hover:text-brand-pink transition-colors text-left">Anasayfa</button>
+          <button type="button" class="js-nav-how hover:text-brand-pink transition-colors text-left">Nasıl Çalışır</button>
+          <button type="button" class="js-nav-help hover:text-brand-pink transition-colors text-left">Yardım</button>
+        </nav>
+        <button
+          type="button"
+          class="js-menu-toggle md:hidden rounded-lg p-2 text-gray-700 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
+          aria-expanded="false"
+          aria-controls="globalMobileNav"
+          aria-label="Menüyü aç"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="flex-1 flex flex-col items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
+        <h1 class="text-[clamp(1.35rem,4vw+0.5rem,1.875rem)] md:text-3xl font-bold text-center mb-2 leading-snug px-1 bg-gradient-to-r from-rose-600 via-fuchsia-600 to-violet-600 bg-clip-text text-transparent drop-shadow-sm">
+          Kolye Fotoğraf Yazdır
+        </h1>
+        <p class="text-gray-700/90 text-center mb-2 max-w-md text-sm sm:text-base leading-relaxed px-1 font-medium">
+          Fotoğrafınızı yükleyin; on farklı madalyon boyutunda A4 sayfasına yazdırın. Kesikli çizgiler
+          kesim rehberidir.
+        </p>
+        <p class="text-center font-semibold mb-6 sm:mb-8 text-sm sm:text-base text-fuchsia-900/80">Hoş geldiniz.</p>
+
+        <div
+          id="uploadAreaMain"
+          class="rounded-xl sm:rounded-2xl bg-white/85 p-5 sm:p-8 md:p-10 max-w-md w-full mx-2 sm:mx-4 cursor-pointer border-2 border-dashed border-fuchsia-200/80 shadow-[0_8px_40px_rgba(167,139,250,0.2),0_0_0_1px_rgba(255,255,255,0.5)_inset] backdrop-blur-md hover:border-brand-pink hover:shadow-[0_12px_48px_rgba(255,107,149,0.25)] transition-all duration-300 active:scale-[0.99] sm:active:scale-100"
+        >
+          <div class="flex flex-col items-center text-center">
+            <div class="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center mb-5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-8 h-8 text-brand-pink"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                />
+              </svg>
+            </div>
+
+            <h2 class="text-lg font-semibold text-gray-800 mb-1">Fotoğraf Yükle</h2>
+            <p class="text-gray-400 text-sm mb-5">Sürükle bırak veya tıklayın</p>
+
+            <button
+              type="button"
+              id="uploadBtnMain"
+              class="bg-brand-pink text-white font-semibold py-3 sm:py-2.5 px-8 sm:px-6 min-h-[44px] sm:min-h-0 rounded-full hover:bg-pink-600 transition-colors duration-200 w-full sm:w-auto"
+            >
+              Dosya Seç
+            </button>
+
+            <p class="text-gray-400 text-xs mt-4">JPG, PNG, WEBP</p>
+          </div>
+        </div>
+
+        <p class="text-sm mt-6 text-center max-w-sm text-gray-600/90 font-medium">
+          Yazdırmadan önce tarayıcıda Önizleme’de ölçeğin %100 olduğundan emin olun.
+        </p>
+        <p
+          data-site-credit
+          class="no-print mt-6 text-center text-[11px] sm:text-xs text-gray-600 drop-shadow-sm"
+        ></p>
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" class="hidden" />
+
+    <div id="mainScreen" class="screen-hidden relative z-10">
+      <header class="app-glass-header w-full py-3 sm:py-4 px-4 sm:px-6 md:px-12 flex flex-wrap items-center justify-between gap-2 shadow-[0_4px_24px_rgba(167,139,250,0.12)] sticky top-0 z-50 no-print pt-[max(0.75rem,env(safe-area-inset-top,0px))] relative border-b border-white/50">
+        <button
+          type="button"
+          class="js-brand-logo text-xl sm:text-2xl font-bold text-brand-pink tracking-tight shrink-0 text-left hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md"
+        >
+          Heart Print
+        </button>
+        <nav class="hidden md:flex gap-6 lg:gap-8 text-gray-600 font-medium text-sm" aria-label="Üst menü">
+          <button type="button" class="js-nav-home hover:text-brand-pink transition-colors text-left">Anasayfa</button>
+          <button type="button" class="js-nav-how hover:text-brand-pink transition-colors text-left">Nasıl Çalışır</button>
+          <button type="button" class="js-nav-help hover:text-brand-pink transition-colors text-left">Yardım</button>
+        </nav>
+        <button
+          type="button"
+          class="js-menu-toggle md:hidden rounded-lg p-2 text-gray-700 hover:bg-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
+          aria-expanded="false"
+          aria-controls="globalMobileNav"
+          aria-label="Menüyü aç"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </header>
+
+      <main class="w-full max-w-[1400px] mx-auto pt-6 sm:pt-8 px-3 sm:px-4 md:px-8 pb-4">
+        <div class="upload-bar-wrap flex justify-center -mt-4 sm:-mt-6 mb-8 sm:mb-12 relative z-40 no-print">
+          <div
+            id="uploadBarSmall"
+            class="rounded-xl sm:rounded-2xl bg-white/90 p-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-2xl mx-2 sm:mx-4 animate-fade-in cursor-pointer border border-white/60 shadow-[0_8px_32px_rgba(167,139,250,0.18)] backdrop-blur-md hover:border-brand-pink/80 hover:shadow-[0_12px_40px_rgba(255,107,149,0.2)] transition-all duration-200"
+          >
+            <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 border border-gray-200">
+              <img id="previewThumb" src="" alt="Yüklenen fotoğraf önizlemesi" class="w-full h-full object-cover" />
+            </div>
+
+            <div class="flex flex-col flex-1 min-w-0">
+              <span id="fileName" class="font-bold text-gray-800 text-xs sm:text-sm truncate">dosya.jpg</span>
+              <span id="fileSize" class="text-gray-400 text-[11px] sm:text-xs font-medium">0 KB</span>
+            </div>
+            </div>
+
+            <div class="flex items-center justify-between sm:justify-end gap-2 sm:gap-4 shrink-0">
+            <div id="statusCheck" class="bg-green-500 rounded-full p-1 sm:mr-0" aria-hidden="true">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-white"
+              >
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+
+            <button
+              type="button"
+              id="uploadBtnSmall"
+              class="border border-brand-pink text-brand-pink hover:bg-brand-pink hover:text-white transition-all duration-200 text-xs sm:text-sm font-semibold py-2.5 sm:py-2 px-3 sm:px-4 rounded-full whitespace-nowrap min-h-[44px] sm:min-h-0 flex items-center justify-center flex-1 sm:flex-initial"
+            >
+              Farklı Fotoğraf Seç
+            </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="print-wrap">
+          <div id="sizesGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-5 md:gap-6 gap-y-5 sm:gap-y-7 md:gap-y-8 mb-4 sm:mb-6 print-grid">
+            <!-- kartlar js/app.js ile doldurulur -->
+          </div>
+        </div>
+        <p
+          data-site-credit
+          class="no-print mb-6 text-center text-[11px] sm:text-xs text-gray-600 drop-shadow-sm sm:mb-8"
+        ></p>
+      </main>
+
+      <div class="bottom-bar fixed bottom-0 left-0 right-0 w-full z-50 no-print pb-[env(safe-area-inset-bottom,0px)]">
+        <div class="bg-gradient-to-r from-brand-pink to-brand-purple/90 text-white py-3 sm:py-4 px-4 sm:px-6 md:px-12 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 sm:gap-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
+          <div class="text-xs sm:text-sm md:text-base text-center md:text-left max-w-3xl opacity-95 order-2 md:order-1">
+            <span class="font-bold">İpuçları:</span> “Ölçek %100”, “Arka planları yazdır” ve mümkünse
+            kenar boşluğu yok veya minimum.
+            <br class="hidden md:block" />
+            <span class="opacity-90">Çıktı tek A4 sayfasına sığacak şekilde düzenlendi.</span>
+          </div>
+          <button
+            type="button"
+            id="printBtn"
+            class="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white border border-white/40 font-bold py-3.5 sm:py-3 px-6 sm:px-10 min-h-[48px] rounded-full shadow-lg transition-all transform sm:hover:scale-105 active:scale-[0.98] text-base sm:text-lg w-full md:w-auto shrink-0 order-1 md:order-2"
+          >
+            Yazdır
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobil menü (tek panel; hangi ekranda olursanız olun) -->
+    <div
+      id="globalMobileNav"
+      class="no-print fixed left-0 right-0 z-[55] hidden md:hidden border-b border-white/60 bg-white/85 shadow-lg backdrop-blur-lg"
+      style="top: max(3.5rem, calc(env(safe-area-inset-top, 0px) + 2.75rem))"
+      role="navigation"
+      aria-label="Mobil menü"
+    >
+      <div class="flex flex-col py-2 px-4">
+        <button type="button" class="js-nav-home js-mobile-nav-item w-full text-left py-3 text-gray-800 font-medium border-b border-gray-100 hover:text-brand-pink">
+          Anasayfa
+        </button>
+        <button type="button" class="js-nav-how js-mobile-nav-item w-full text-left py-3 text-gray-800 font-medium border-b border-gray-100 hover:text-brand-pink">
+          Nasıl Çalışır
+        </button>
+        <button type="button" class="js-nav-help js-mobile-nav-item w-full text-left py-3 text-gray-800 font-medium hover:text-brand-pink">
+          Yardım
+        </button>
+      </div>
+    </div>
+
+    <!-- Bilgi panelleri: içerik aşağıdaki şablondan kopyalanır -->
+    <div
+      id="infoOverlay"
+      class="info-overlay no-print fixed inset-0 z-[100] bg-black/45 sm:p-4"
+      aria-hidden="true"
+    >
+      <div
+        class="info-panel relative w-full max-h-[min(90dvh,560px)] overflow-y-auto rounded-t-2xl bg-white p-6 pb-8 shadow-2xl sm:max-w-lg sm:rounded-2xl sm:p-8"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="infoPanelTitle"
+      >
+        <button
+          type="button"
+          id="infoPanelClose"
+          class="absolute right-3 top-3 rounded-full p-2 text-2xl leading-none text-gray-500 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
+          aria-label="Kapat"
+        >
+          ×
+        </button>
+        <div id="infoPanelContent" class="pr-2 pt-2 text-gray-700"></div>
+      </div>
+    </div>
+
+    <template id="tpl-how">
+      <h2 id="infoPanelTitle" class="mb-4 text-xl font-bold text-gray-900">Nasıl Çalışır?</h2>
+      <ol class="list-decimal space-y-3 pl-5 text-sm leading-relaxed sm:text-base">
+        <li>
+          <strong class="text-gray-900">Fotoğraf yükleyin.</strong> “Dosya Seç” ile seçin veya kutuya sürükleyip bırakın.
+        </li>
+        <li>
+          <strong class="text-gray-900">Boyutlara bakın.</strong> On farklı mm ölçüsünde kalp önizlemeleri listelenir; yazdırmada bu ölçüler korunur.
+        </li>
+        <li>
+          <strong class="text-gray-900">Yazdır’a basın.</strong> Tarayıcı önizlemesinde sayfa ölçeğini <strong>%100</strong> yapın; “Arka plan grafikleri” seçeneğini açın.
+        </li>
+        <li>
+          <strong class="text-gray-900">Kesin.</strong> Baskıdaki <strong>kesikli çizgi</strong> kalp çevresindedir; bu hat boyunca keserek madalyon çıtasını kullanın.
+        </li>
+      </ol>
+    </template>
+
+    <template id="tpl-help">
+      <h2 id="infoPanelTitle" class="mb-4 text-xl font-bold text-gray-900">Yardım</h2>
+      <ul class="space-y-3 text-sm leading-relaxed sm:text-base">
+        <li>
+          <strong class="text-gray-900">Dosya formatları:</strong> JPG, PNG, WEBP. Mümkünse net, iyi aydınlatılmış bir yüz veya motif kullanın.
+        </li>
+        <li>
+          <strong class="text-gray-900">Çıktı küçük/büyük görünüyorsa:</strong> Yazıcı veya PDF diyaloğunda “Ölçek: Gerçek boyut / %100” seçin; “Sayfaya sığdır” kapalı olsun.
+        </li>
+        <li>
+          <strong class="text-gray-900">Başa dönmek:</strong> Üstteki <strong>Heart Print</strong> yazısına tıklayın; yükleme ekranına döner ve yeni fotoğraf seçebilirsiniz.
+        </li>
+        <li>
+          <strong class="text-gray-900">Sorun devam ederse:</strong> Farklı tarayıcı (Chrome, Safari, Firefox) veya “PDF olarak kaydet” ile deneyin.
+        </li>
+      </ul>
+    </template>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
