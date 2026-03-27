@@ -23,3 +23,7 @@ Küçük kalp penceresine uygun ölçüde baskı almak zor. Heart Print, fotoğr
 4. **Yazdır** → yazıcıda **ölçek %100** / gerçek boyut, mümkünse arka plan grafikleri açık.
 ## Lisans / kredi
 İhtiyacınıza göre ekleyin (MIT, telif vb.).
+
+![Heart Print önizleme](ss1.png)
+![Heart Print önizleme](ss2.png)
+![Heart Print önizleme](ss3.png)
